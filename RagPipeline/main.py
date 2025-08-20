@@ -7,12 +7,18 @@ from langchain_ollama import OllamaLLM
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains.retrieval import create_retrieval_chain
 from langchain.prompts import ChatPromptTemplate
-import os
-from sentence_transformers import SentenceTransformer 
 
-def BuildQAChain(doc):
+uploaded_file = None
 
-    docs = fileUploading(doc)
+def getUploadedFile(uploaded):
+    global uploaded_file
+    uploaded_file = uploaded
+
+def BuildQAChain():
+    print(uploaded_file.name)
+
+    docs = fileUploading(uploaded_file)
+
     document = docs.load()
 
 

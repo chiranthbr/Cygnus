@@ -3,15 +3,15 @@ import streamlit as st
 from langchain.document_loaders import TextLoader, CSVLoader, Docx2txtLoader, PyPDFLoader
 
 
-from RagPipeline.main import BuildQAChain
-
-# if "uploaded_file" not in st.session_state:
-#     st.session_state.uploaded_file = st.file_uploader(type=["txt", 'pdf', "docx", "csv", ], accept_multiple_files=False, label="Upload File", key=123)
-
-# # st.session_state.uploaded_file = st.file_uploader(type=["txt", 'pdf', "docx", "csv", ], accept_multiple_files=False, label="Upload File", key=123)
-# uploaded_file = st.session_state.uploaded_file
+from RagPipeline.main import BuildQAChain, getUploadedFile
+uploaded = False
 
 uploaded_file = st.file_uploader(type=["txt", 'pdf', "docx", "csv", ], accept_multiple_files=False, label="Upload File")
+if uploaded_file is None and not uploaded:
+    st.info("Please upload a file")
+    st.stop()
+uploaded = True
+getUploadedFile(uploaded_file)
 
 def checkOllamaInstalled():
     try:
@@ -25,11 +25,10 @@ if not checkOllamaInstalled():
     st.error("Ollama is not running (or) it is not installed. Make sure it is installed and run `ollama serve` before using the app!!")
     st.stop()
 
-# @st.cache_resource
+@st.cache_resource
 def loadQAChain():
-    checkOllamaInstalled()
-    if uploaded_file is not None:
-        return BuildQAChain(uploaded_file)
+    
+    return BuildQAChain()
 
 # QA chain
 qa_chain = loadQAChain()
